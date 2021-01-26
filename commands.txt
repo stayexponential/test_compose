@@ -1,0 +1,39 @@
+create project : docker-compose run django_app django-admin startproject MAIN .
+docker exec -it postgres psql -U postgres
+
+start / stop services
+docker-compose up / down
+
+ALLOWED_HOSTS = ['*'] on settings.py
+
+====================== Database Path ============================
+to migrate need to be access to docker ps 
+> config database information on settings.py
+        'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'pgdb',
+        'PORT': 5432,
+    }
+> docker exec -it django_pms bash 
+> ls 
+> python manage.py migrate                                            //--- or ---// docker-compose run django_app python manage.py migrate
+> python manage.py createsuperuser  //--u admin -p Star@dmin2021       //--- or ---// docker-compose run django_app python manage.py createsuperuser
+--=== create new command to run check database ==--
+> docker exec -it pgdb psql -U postgres
+> type for database name "postgres"
+    \c <database_name>         //- - to access to the specific database
+    \d
+    \d+ <table_name>
+    \q
+
+-- >> When run command should run on the "docker-compose"
+    admin user : admin
+    password : star@dmin2021
+
+to backup database
+pg_dump -U postgres -W -F t postgres > backup.tar
+
+* * * to create docker volumes please delete the container and create a volumes
